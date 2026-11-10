@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Firebase cache & logs
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# Environment & local overrides
+.env
+.env.local
+*.local
+
+# Operating System files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/

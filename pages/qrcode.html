@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Resmi | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { padding-top: var(--nav-height); background: var(--gray-50); }
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 44px 0 54px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+    .page-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .qr-container {
+      max-width: 900px;
+      margin: -24px auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .qr-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .card-box {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    /* Standee Meja Kasir Preview */
+    .standee-card {
+      background: white;
+      border-radius: 20px;
+      border: 4px solid var(--primary);
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .standee-header {
+      margin-bottom: 16px;
+    }
+    .standee-logo {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 8px;
+    }
+    .standee-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 900;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+    }
+    .standee-subtitle {
+      font-size: 0.78rem;
+      color: var(--gray-500);
+    }
+    .standee-badge {
+      display: inline-block;
+      background: #E0F2FE;
+      color: #0284C7;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 14px;
+      border-radius: 99px;
+      margin: 10px 0 16px;
+      letter-spacing: 0.5px;
+    }
+    .standee-qr-frame {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      border: 2px solid var(--gray-200);
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      position: relative;
+    }
+    #qrcode-canvas-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .standee-footer {
+      margin-top: 18px;
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+    .standee-footer strong { color: var(--gray-900); }
+
+    /* Print styling */
+    @media print {
+      body { background: white !important; padding: 0 !important; }
+      .navbar, .page-header, .qr-controls, .mobile-menu, #toast-container { display: none !important; }
+      .qr-container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      .qr-layout { display: block !important; }
+      .standee-card {
+        border: 4px solid #0D47A1 !important;
+        box-shadow: none !important;
+        margin: 20px auto !important;
+        max-width: 450px !important;
+        page-break-inside: avoid;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .qr-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-brand">
+      <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="nav-logo" style="width:42px;height:42px;border-radius:10px;">
+      <div class="nav-name">
+        <span>Nagasa Laundry</span>
+        <span>Palu, Sulawesi Tengah</span>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="../index.html" class="nav-link">Beranda</a>
+      <a href="layanan.html" class="nav-link">Layanan</a>
+      <a href="pesan.html" class="nav-link">Pesan</a>
+      <a href="status.html" class="nav-link">Cek Status</a>
+      <a href="riwayat.html" class="nav-link">Riwayat</a>
+      <a href="kontak.html" class="nav-link">Kontak</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://wa.me/6282251267232" target="_blank" class="nav-wa-btn"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Beranda</a>
+  <a href="layanan.html" class="mobile-nav-link"><i class="fa-solid fa-list-check"></i> Layanan</a>
+  <a href="pesan.html" class="mobile-nav-link"><i class="fa-solid fa-cart-plus"></i> Pesan Laundry</a>
+  <a href="status.html" class="mobile-nav-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+  <a href="riwayat.html" class="mobile-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pesanan</a>
+  <a href="qrcode.html" class="mobile-nav-link active"><i class="fa-solid fa-qrcode"></i> QR Code Toko</a>
+  <a href="kontak.html" class="mobile-nav-link"><i class="fa-solid fa-phone"></i> Kontak</a>
+  <a href="https://wa.me/6282251267232" target="_blank" class="mobile-wa-btn"><i class="fab fa-whatsapp"></i> Chat WhatsApp</a>
+</div>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fa-solid fa-qrcode" style="margin-right:10px;"></i>Sistem QR Code Nagasa Laundry</h1>
+    <p>Media scan resmi untuk diletakkan di etalase toko, brosur, nota, dan promosi digital</p>
+  </div>
+</div>
+
+<div class="qr-container">
+  <div class="qr-layout">
+    
+    <!-- Left: Standee Preview Display -->
+    <div class="standee-card" id="standee-card">
+      <div class="standee-header">
+        <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="standee-logo">
+        <h2 class="standee-title">NAGASA LAUNDRY</h2>
+        <p class="standee-subtitle">Tanjung Harapan 1, Palu • WA: 0822-5126-7232</p>
+      </div>
+
+      <div class="standee-badge">
+        <i class="fa-solid fa-camera"></i> SCAN DI SINI UNTUK PESAN ONLINE
+      </div>
+
+      <div class="standee-qr-frame">
+        <div id="qrcode-canvas-wrapper">
+          <canvas id="qr-custom-canvas" width="220" height="220"></canvas>
+          <div id="raw-qrcode" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="standee-footer">
+        <p>Arahkan kamera smartphone Anda ke QR Code di atas untuk membuka website resmi & memesan layanan laundry.</p>
+        <p style="margin-top:6px;font-size:0.75rem;color:var(--primary);font-weight:700;">
+          <i class="fa-solid fa-circle-check"></i> Cepat • Bersih • Rapi • Antar-Jemput
+        </p>
+      </div>
+    </div>
+
+    <!-- Right: Controls & Download Options -->
+    <div class="card-box qr-controls">
+      <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.15rem;color:var(--gray-900);margin-bottom:16px;">
+        <i class="fa-solid fa-sliders" style="color:var(--primary);margin-right:8px;"></i>
+        Pengaturan & Unduh QR Code
+      </h3>
+
+      <div class="form-group">
+        <label class="form-label" for="qr-target-url">URL Tujuan Scan QR</label>
+        <input type="url" id="qr-target-url" class="form-control" value="" onchange="generateCustomQR();">
+        <small style="color:var(--gray-500);font-size:0.75rem;margin-top:4px;display:block;">
+          Default mengarah ke URL website Nagasa Laundry. Tetap aktif dan tidak berubah saat desain diperbarui.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Warna QR Code</label>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn btn-sm" style="background:#0D47A1;color:white;border-radius:var(--radius-sm);" onclick="changeColor('#0D47A1')">Biru Navy</button>
+          <button type="button" class="btn btn-sm" style="background:#0284C7;color:white;border-radius:var(--radius-sm);" onclick="changeColor('#0284C7')">Biru Cerah</button>
+          <button type="button" class="btn btn-sm" style="background:#0F172A;color:white;border-radius:var(--radius-sm);" onclick="changeColor('#0F172A')">Hitam Klasik</button>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--gray-200);margin:24px 0 20px;"></div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button class="btn btn-primary btn-block" onclick="downloadQRCodePNG();">
+          <i class="fa-solid fa-download"></i> Unduh Gambar QR Code (PNG)
+        </button>
+
+        <button class="btn btn-secondary btn-block" onclick="window.print();">
+          <i class="fa-solid fa-print"></i> Cetak Standee Meja Toko
+        </button>
+
+        <a id="btn-open-url" href="#" target="_blank" class="btn btn-outline btn-block">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Tes Buka URL Target
+        </a>
+      </div>
+
+      <div style="background:var(--primary-pale);border-radius:var(--radius);padding:14px;margin-top:20px;font-size:0.8rem;color:var(--primary-dark);">
+        <i class="fa-solid fa-circle-info"></i> <strong>Tips Penggunaan:</strong><br>
+        Cetak Standee dan laminasi untuk diletakkan di meja kasir Tanjung Harapan 1. Pelanggan baru cukup mengarahkan kamera HP untuk memesan laundry antar-jemput kapan saja.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let qrColor = '#0D47A1';
+  let targetUrl = window.location.origin;
+
+  // Hamburger Menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // Tentukan URL target (jika dibuka di localhost atau file, fallback ke hosting resmi atau current)
+    const currentOrigin = window.location.origin;
+    if (currentOrigin.includes('localhost') || currentOrigin.includes('127.0.0.1')) {
+      targetUrl = currentOrigin + window.location.pathname.replace('/pages/qrcode.html', '/index.html');
+    } else {
+      targetUrl = currentOrigin + '/index.html';
+    }
+    document.getElementById('qr-target-url').value = targetUrl;
+    document.getElementById('btn-open-url').href = targetUrl;
+    generateCustomQR();
+  });
+
+  function changeColor(color) {
+    qrColor = color;
+    generateCustomQR();
+  }
+
+  function generateCustomQR() {
+    targetUrl = document.getElementById('qr-target-url').value.trim() || window.location.origin;
+    document.getElementById('btn-open-url').href = targetUrl;
+
+    const rawDiv = document.getElementById('raw-qrcode');
+    rawDiv.innerHTML = '';
+
+    // Buat QR Code menggunakan QRCode.js dengan Error Correction Level H (30%)
+    new QRCode(rawDiv, {
+      text: targetUrl,
+      width: 256,
+      height: 256,
+      colorDark: qrColor,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Tunggu canvas render selesai lalu tambahkan logo di tengah
+    setTimeout(() => {
+      drawCompositeQR();
+    }, 150);
+  }
+
+  function drawCompositeQR() {
+    const rawCanvas = document.querySelector('#raw-qrcode canvas');
+    if (!rawCanvas) return;
+
+    const targetCanvas = document.getElementById('qr-custom-canvas');
+    const ctx = targetCanvas.getContext('2d');
+    const size = 220;
+    targetCanvas.width = size;
+    targetCanvas.height = size;
+
+    // 1. Gambar QR matrix
+    ctx.drawImage(rawCanvas, 0, 0, size, size);
+
+    // 2. Gambar logo di tengah
+    const logoImg = new Image();
+    logoImg.src = '../assets/images/logo-icon.svg';
+    logoImg.onload = function() {
+      const logoSize = 52;
+      const x = (size - logoSize) / 2;
+      const y = (size - logoSize) / 2;
+
+      // Background rounded kotak putih di bawah logo agar kontras dan mudah discan
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      roundRect(ctx, x - 4, y - 4, logoSize + 8, logoSize + 8, 12);
+      ctx.fill();
+
+      // Border halus
+      ctx.strokeStyle = qrColor;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Gambar icon logo
+      ctx.drawImage(logoImg, x, y, logoSize, logoSize);
+    };
+  }
+
+  function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+
+  function downloadQRCodePNG() {
+    const canvas = document.getElementById('qr-custom-canvas');
+    const link = document.createElement('a');
+    link.download = 'QR_Nagasa_Laundry.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nota Transaksi Digital | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body {
+      background: #E2E8F0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Action Bar (Top) */
+    .receipt-actions-bar {
+      max-width: 650px;
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Receipt Paper */
+    .receipt-paper {
+      background: white;
+      max-width: 650px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      border-top: 6px solid var(--primary);
+    }
+
+    .receipt-header {
+      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 2px dashed #CBD5E1;
+    }
+    .receipt-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 12px;
+    }
+    .receipt-brand {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #0D47A1;
+      letter-spacing: 0.5px;
+    }
+    .receipt-subbrand {
+      font-size: 0.82rem;
+      color: #64748B;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    /* Meta Info Grid */
+    .receipt-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 0.86rem;
+    }
+    .meta-label { color: #64748B; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
+    .meta-val { font-weight: 700; color: #1E293B; margin-top: 2px; }
+
+    /* Items Table */
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+    .receipt-table th {
+      text-align: left;
+      padding: 10px 0;
+      border-bottom: 2px solid #E2E8F0;
+      color: #475569;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .receipt-table td {
+      padding: 12px 0;
+      border-bottom: 1px solid #F1F5F9;
+      color: #1E293B;
+    }
+
+    /* Calculations */
+    .receipt-calc {
+      margin-left: auto;
+      max-width: 320px;
+      padding-top: 10px;
+      font-size: 0.88rem;
+    }
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: #475569;
+    }
+    .calc-row.total {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #0D47A1;
+      border-top: 2px solid #0D47A1;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    /* Watermark / Stamp */
+    .payment-stamp {
+      display: inline-block;
+      padding: 6px 18px;
+      border: 3px solid;
+      border-radius: 8px;
+      font-weight: 900;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 16px;
+      transform: rotate(-4deg);
+    }
+    .stamp-lunas { border-color: #10B981; color: #059669; background: #ECFDF5; }
+    .stamp-pending { border-color: #F59E0B; color: #D97706; background: #FFFBEB; }
+    .stamp-unpaid { border-color: #EF4444; color: #DC2626; background: #FEF2F2; }
+
+    .receipt-footer {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 2px dashed #CBD5E1;
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: #64748B;
+      line-height: 1.6;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+      }
+      .receipt-actions-bar {
+        display: none !important;
+      }
+      .receipt-paper {
+        box-shadow: none !important;
+        max-width: 100% !important;
+        border: none !important;
+        padding: 20px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="loading-overlay"><div class="loading-spinner"></div><span class="loading-text">Menyiapkan Nota...</span></div>
+<div id="toast-container"></div>
+
+<!-- Action Bar -->
+<div class="receipt-actions-bar">
+  <a href="../index.html" class="btn btn-sm btn-outline">
+    <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+  </a>
+  <div style="display:flex;gap:8px;">
+    <button class="btn btn-sm btn-primary" onclick="window.print();">
+      <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+    </button>
+    <a id="btn-share-wa" href="#" target="_blank" class="btn btn-sm btn-wa">
+      <i class="fab fa-whatsapp"></i> Bagikan Nota
+    </a>
+  </div>
+</div>
+
+<!-- Receipt Paper Document -->
+<div class="receipt-paper" id="receipt-paper">
+  
+  <!-- Header -->
+  <div class="receipt-header">
+    <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="receipt-logo">
+    <h1 class="receipt-brand">NAGASA LAUNDRY</h1>
+    <p class="receipt-subbrand">
+      Jl. Tanjung Harapan 1, Palu, Sulawesi Tengah<br>
+      WhatsApp: 082251267232 • Jam Buka: 08.00–16.30 WITA<br>
+      <em>Bersih, Rapi, Wangi & Terpercaya</em>
+    </p>
+  </div>
+
+  <!-- Meta Information -->
+  <div class="receipt-meta">
+    <div>
+      <div class="meta-label">Nomor Transaksi</div>
+      <div class="meta-val" id="rec-trans-id" style="color:var(--primary);font-size:1.05rem;">-</div>
+    </div>
+    <div>
+      <div class="meta-label">Tanggal Transaksi</div>
+      <div class="meta-val" id="rec-trans-date">-</div>
+    </div>
+    <div>
+      <div class="meta-label">Nama Pelanggan</div>
+      <div class="meta-val" id="rec-cust-name">-</div>
+    </div>
+    <div>
+      <div class="meta-label">Nomor WhatsApp</div>
+      <div class="meta-val" id="rec-cust-phone">-</div>
+    </div>
+    <div>
+      <div class="meta-label">Metode Pengambilan</div>
+      <div class="meta-val" id="rec-pickup-method">-</div>
+    </div>
+    <div>
+      <div class="meta-label">Metode Pembayaran</div>
+      <div class="meta-val" id="rec-pay-method">-</div>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <table class="receipt-table">
+    <thead>
+      <tr>
+        <th>Layanan Laundry</th>
+        <th style="text-align:center;">Bobot / Qty</th>
+        <th style="text-align:right;">Tarif Satuan</th>
+        <th style="text-align:right;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <strong id="rec-service-name">-</strong>
+          <div id="rec-service-desc" style="font-size:0.75rem;color:#64748B;">Pencucian higienis profesional</div>
+        </td>
+        <td style="text-align:center;" id="rec-qty-display">-</td>
+        <td style="text-align:right;" id="rec-unit-price">-</td>
+        <td style="text-align:right;font-weight:700;" id="rec-service-subtotal">-</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Calculation & Stamp -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div id="rec-stamp" class="payment-stamp stamp-pending">
+        MENUNGGU
+      </div>
+      <div style="font-size:0.75rem;color:#64748B;margin-top:6px;">
+        Status Pengerjaan: <strong id="rec-order-status" style="color:var(--primary);">-</strong>
+      </div>
+    </div>
+
+    <div class="receipt-calc">
+      <div class="calc-row">
+        <span>Subtotal Layanan:</span>
+        <span id="rec-calc-subtotal">Rp 0</span>
+      </div>
+      <div class="calc-row">
+        <span>Biaya Antar-Jemput:</span>
+        <span id="rec-calc-delivery">Rp 0</span>
+      </div>
+      <div class="calc-row" id="row-rec-discount" style="display:none;color:#059669;">
+        <span>Diskon:</span>
+        <span id="rec-calc-discount">- Rp 0</span>
+      </div>
+      <div class="calc-row total">
+        <span>TOTAL:</span>
+        <span id="rec-calc-total">Rp 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Note if exists -->
+  <div id="rec-notes-wrap" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:12px;margin-top:20px;font-size:0.8rem;display:none;">
+    <strong>Catatan Khusus:</strong> <span id="rec-notes-text">-</span>
+  </div>
+
+  <!-- Footer / Terms -->
+  <div class="receipt-footer">
+    <p><strong>Syarat & Ketentuan Layanan:</strong></p>
+    <p>
+      1. Komplain pakaian diterima maksimal 1x24 jam setelah penyerahan disertai nota ini.<br>
+      2. Pakaian luntur atau rusak karena sifat bahan bawaan di luar tanggung jawab pihak laundry jika tidak ada instruksi khusus.<br>
+      3. Pakaian yang tidak diambil dalam waktu lebih dari 30 hari di luar tanggung jawab laundry.
+    </p>
+    <div style="margin-top:14px;font-weight:700;color:var(--primary-dark);">
+      Terima Kasih Telah Memilih Nagasa Laundry! 🫧✨
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { getOrderByCode } from '../js/data-service.js';
+  import { 
+    formatCurrency, 
+    formatDate, 
+    getStatusLabel, 
+    getPaymentStatusLabel, 
+    buildWaOrderLink,
+    showToast, 
+    showLoading, 
+    hideLoading 
+  } from '../js/utils.js';
+
+  async function loadReceipt() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (!code) {
+      showToast('error', 'Kode Kosong', 'Tidak ada kode transaksi yang ditentukan.');
+      setTimeout(() => window.location.href = 'status.html', 2000);
+      return;
+    }
+
+    showLoading('Memuat Nota Transaksi...');
+    try {
+      const order = await getOrderByCode(code);
+      hideLoading();
+
+      if (!order) {
+        showToast('error', 'Nota Tidak Ditemukan', `Pesanan dengan kode ${code} tidak ada.`);
+        return;
+      }
+
+      renderReceiptData(order);
+    } catch (e) {
+      hideLoading();
+      console.error(e);
+      showToast('error', 'Gagal memuat nota', e.message);
+    }
+  }
+
+  function renderReceiptData(order) {
+    document.title = `Nota_${order.transactionId}_Nagasa_Laundry`;
+
+    document.getElementById('rec-trans-id').textContent = order.transactionId;
+    document.getElementById('rec-trans-date').textContent = formatDate(order.createdAt);
+    document.getElementById('rec-cust-name').textContent = order.customerName;
+    document.getElementById('rec-cust-phone').textContent = order.customerPhone;
+    document.getElementById('rec-pickup-method').textContent = order.pickupMethod === 'delivery' 
+      ? `Antar-Jemput (${order.deliveryDistanceKm || 1} km)` 
+      : 'Antar Langsung ke Toko';
+    document.getElementById('rec-pay-method').textContent = (order.paymentMethod || 'cash').toUpperCase();
+
+    // Layanan
+    document.getElementById('rec-service-name').textContent = order.serviceName;
+    const isItem = order.priceType === 'per_item';
+    document.getElementById('rec-qty-display').textContent = isItem ? `${order.quantity} Pcs` : `${order.weight} Kg`;
+    document.getElementById('rec-unit-price').textContent = `${formatCurrency(order.servicePrice)} / ${isItem ? 'pcs' : 'kg'}`;
+    document.getElementById('rec-service-subtotal').textContent = formatCurrency(order.serviceTotal);
+
+    // Calc
+    document.getElementById('rec-calc-subtotal').textContent = formatCurrency(order.serviceTotal);
+    document.getElementById('rec-calc-delivery').textContent = order.deliveryFee ? formatCurrency(order.deliveryFee) : 'Rp 0';
+    
+    if (order.discount && order.discount > 0) {
+      document.getElementById('row-rec-discount').style.display = 'flex';
+      document.getElementById('rec-calc-discount').textContent = `- ${formatCurrency(order.discount)}`;
+    }
+
+    document.getElementById('rec-calc-total').textContent = formatCurrency(order.grandTotal);
+    document.getElementById('rec-order-status').textContent = getStatusLabel(order.status);
+
+    // Stamp
+    const stampEl = document.getElementById('rec-stamp');
+    if (order.paymentStatus === 'sudah_dibayar') {
+      stampEl.className = 'payment-stamp stamp-lunas';
+      stampEl.textContent = 'LUNAS';
+    } else if (order.paymentStatus === 'menunggu_verifikasi') {
+      stampEl.className = 'payment-stamp stamp-pending';
+      stampEl.textContent = 'VERIFIKASI';
+    } else {
+      stampEl.className = 'payment-stamp stamp-unpaid';
+      stampEl.textContent = 'BELUM LUNAS';
+    }
+
+    // Notes
+    if (order.notes) {
+      document.getElementById('rec-notes-wrap').style.display = 'block';
+      document.getElementById('rec-notes-text').textContent = order.notes;
+    }
+
+    // WhatsApp Share Link
+    document.getElementById('btn-share-wa').href = buildWaOrderLink(order);
+  }
+
+  loadReceipt();
+</script>
+</body>
+</html>

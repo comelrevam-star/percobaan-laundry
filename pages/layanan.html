@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Layanan laundry lengkap di Nagasa Laundry, Palu. Cuci kering, cuci setrika, setrika saja, kiloan, satuan, dan ekspres.">
+  <title>Layanan Laundry | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--gray-50); }
+    .page-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); padding: 48px 0 60px; color: white; text-align: center; margin-bottom: -32px; }
+    .page-header h1 { font-family: var(--font-heading); font-size: clamp(1.6rem,4vw,2.2rem); font-weight: 800; margin-bottom: 8px; }
+    .page-header p { opacity: 0.9; font-size: 0.95rem; }
+    .layanan-page { max-width: 1200px; margin: 0 auto; padding: 48px 24px 60px; }
+    .service-detail-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .service-detail-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-lighter);
+    }
+    .service-card-top {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      padding: 28px 24px 20px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .service-card-name {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .service-card-price {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #FDD835;
+    }
+    .service-card-price small {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+    }
+    .service-card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card-desc {
+      font-size: 0.88rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .service-card-features {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .service-feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--gray-700);
+    }
+    .service-feature i { color: var(--success); font-size: 0.8rem; }
+    .service-card-cta {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      background: var(--primary-pale);
+      color: var(--primary);
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: var(--transition-fast);
+      text-decoration: none;
+    }
+    .service-card-cta:hover { background: var(--primary); color: white; }
+    .info-banner {
+      background: linear-gradient(135deg, var(--primary-pale), white);
+      border: 1px solid rgba(21,101,192,0.15);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .info-banner-icon { font-size: 2.5rem; flex-shrink: 0; color: var(--primary); }
+    .info-banner-title { font-family: var(--font-heading); font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+    .info-banner-text { font-size: 0.88rem; color: var(--gray-600); line-height: 1.6; }
+    @media (max-width: 768px) { .info-banner { flex-direction: column; text-align: center; } }
+  </style>
+</head>
+<body>
+<div id="loading-overlay"><div class="loading-spinner"></div><span class="loading-text">Memuat Layanan...</span></div>
+<div id="toast-container"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-brand">
+      <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="nav-logo" style="width:42px;height:42px;border-radius:10px;">
+      <div class="nav-name">
+        <span>Nagasa Laundry</span>
+        <span>Palu, Sulawesi Tengah</span>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="../index.html" class="nav-link">Beranda</a>
+      <a href="layanan.html" class="nav-link active">Layanan</a>
+      <a href="pesan.html" class="nav-link">Pesan</a>
+      <a href="status.html" class="nav-link">Cek Status</a>
+      <a href="riwayat.html" class="nav-link">Riwayat</a>
+      <a href="kontak.html" class="nav-link">Kontak</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://wa.me/6282251267232" target="_blank" class="nav-wa-btn"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Beranda</a>
+  <a href="layanan.html" class="mobile-nav-link active"><i class="fa-solid fa-list-check"></i> Layanan</a>
+  <a href="pesan.html" class="mobile-nav-link"><i class="fa-solid fa-cart-plus"></i> Pesan Laundry</a>
+  <a href="status.html" class="mobile-nav-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+  <a href="riwayat.html" class="mobile-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pesanan</a>
+  <a href="qrcode.html" class="mobile-nav-link"><i class="fa-solid fa-qrcode"></i> QR Code Toko</a>
+  <a href="kontak.html" class="mobile-nav-link"><i class="fa-solid fa-phone"></i> Kontak</a>
+  <a href="https://wa.me/6282251267232" target="_blank" class="mobile-wa-btn"><i class="fab fa-whatsapp"></i> Chat WhatsApp</a>
+</div>
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fa-solid fa-shirt" style="margin-right:12px;"></i>Layanan & Tarif Laundry</h1>
+    <p>Pilihan paket laundry higienis, bersih, wangi, dan rapi untuk warga Palu</p>
+  </div>
+</div>
+
+<div class="layanan-page">
+
+  <!-- Info Banner -->
+  <div class="info-banner">
+    <div class="info-banner-icon"><i class="fa-solid fa-shield-heart"></i></div>
+    <div>
+      <div class="info-banner-title">Harga Transparan & Kualitas Terjamin</div>
+      <div class="info-banner-text">
+        Semua tarif dihitung secara otomatis dan transparan. Pakaian ditimbang akurat dan dicuci menggunakan deterjen higienis anti-bakteri serta setrika uap modern. Layanan antar-jemput tersedia di seluruh area Palu.
+      </div>
+    </div>
+  </div>
+
+  <!-- Services Grid (Dynamic) -->
+  <div class="services-grid" id="services-detail-grid">
+    <!-- Populated by JS -->
+  </div>
+
+  <!-- Pricing Table -->
+  <div style="margin-top: 60px;">
+    <div class="section-header center" style="margin-bottom: 32px;">
+      <div class="section-label">Daftar Lengkap</div>
+      <h2 class="section-title">Tabel Tarif Layanan</h2>
+    </div>
+    <div class="table-container" style="background:white;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--gray-200);overflow:hidden;">
+      <table class="data-table" style="margin:0;">
+        <thead>
+          <tr>
+            <th>Jenis Layanan</th>
+            <th>Tarif</th>
+            <th>Satuan</th>
+            <th>Estimasi Waktu</th>
+            <th>Keterangan</th>
+            <th style="text-align:right;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="price-table-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="text-align:center; margin-top: 60px; padding: 48px; background: var(--primary-pale); border-radius: var(--radius-xl); border: 1px solid rgba(21,101,192,0.15);">
+    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 12px;">
+      Siap Mencuci Pakaian Anda?
+    </h3>
+    <p style="color: var(--gray-600); margin-bottom: 24px;">Pesan penjemputan online sekarang atau konsultasikan jenis pakaian Anda ke kasir kami.</p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="pesan.html" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-cart-shopping"></i> Pesan Sekarang
+      </a>
+      <a href="https://wa.me/6282251267232?text=Halo%20Nagasa%20Laundry%2C%20saya%20ingin%20tanya%20tentang%20layanan" target="_blank" class="btn btn-wa btn-lg">
+        <i class="fab fa-whatsapp"></i> Tanya via WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/6282251267232" target="_blank" class="wa-fab" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+<script type="module">
+  import { getActiveServices } from '../js/data-service.js';
+  import { formatCurrency, showLoading, hideLoading } from '../js/utils.js';
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+
+  async function loadServices() {
+    showLoading('Memuat Layanan...');
+    try {
+      const services = await getActiveServices();
+      hideLoading();
+
+      // Render Cards
+      const grid = document.getElementById('services-detail-grid');
+      const tbody = document.getElementById('price-table-body');
+
+      grid.innerHTML = services.map(s => {
+        const unit = s.priceType === 'per_item' ? '/item' : '/kg';
+        const badge = s.badge ? `<span style="position:absolute;top:16px;right:16px;background:#FDD835;color:#1E293B;font-size:0.7rem;font-weight:800;padding:4px 10px;border-radius:99px;">${s.badge}</span>` : '';
+        const features = (s.features || [
+          "Deterjen higienis anti-bakteri",
+          "Setrika uap licin & halus",
+          "Wangi segar tahan lama",
+          "Kemasan rapi anti-debu"
+        ]).map(f => `<div class="service-feature"><i class="fa-solid fa-check"></i> ${f}</div>`).join('');
+
+        return `
+          <div class="service-detail-card">
+            <div class="service-card-top">
+              ${badge}
+              <div class="service-card-icon"><i class="fa-solid ${s.icon || 'fa-shirt'}"></i></div>
+              <div class="service-card-name">${s.name}</div>
+              <div class="service-card-price">${formatCurrency(s.price)} <small>${unit}</small></div>
+            </div>
+            <div class="service-card-body">
+              <p class="service-card-desc">${s.description || 'Layanan laundry higienis profesional di Palu.'}</p>
+              <div class="service-card-features">
+                ${features}
+              </div>
+              <a href="pesan.html" class="service-card-cta">Pesan Sekarang →</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render Table
+      tbody.innerHTML = services.map(s => {
+        const unit = s.priceType === 'per_item' ? 'per item' : 'per kg';
+        const est = s.estimatedHours ? `${s.estimatedHours} jam` : '1-2 hari';
+        return `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td class="text-primary font-bold">${formatCurrency(s.price)}</td>
+            <td>${unit}</td>
+            <td>${est}</td>
+            <td>${s.description || '-'}</td>
+            <td style="text-align:right;">
+              <a href="pesan.html" class="btn btn-primary btn-sm">Pesan</a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+    } catch (e) {
+      hideLoading();
+      console.error(e);
+    }
+  }
+
+  loadServices();
+</script>
+</body>
+</html>

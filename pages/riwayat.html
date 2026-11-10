@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Pesanan | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--gray-50); }
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 44px 0 54px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+    .page-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .history-container {
+      max-width: 950px;
+      margin: -24px auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .auth-verify-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 24px;
+    }
+    .security-notice {
+      background: var(--primary-pale);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      color: var(--primary-dark);
+      font-size: 0.82rem;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+    }
+    
+    /* Order History List */
+    .history-list { display: flex; flex-direction: column; gap: 16px; }
+    .history-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .history-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-lighter);
+    }
+    .history-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--gray-100);
+      margin-bottom: 14px;
+    }
+    .history-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+<div id="loading-overlay"><div class="loading-spinner"></div><span class="loading-text">Memverifikasi Data...</span></div>
+<div id="toast-container"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-brand">
+      <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="nav-logo" style="width:42px;height:42px;border-radius:10px;">
+      <div class="nav-name">
+        <span>Nagasa Laundry</span>
+        <span>Palu, Sulawesi Tengah</span>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="../index.html" class="nav-link">Beranda</a>
+      <a href="layanan.html" class="nav-link">Layanan</a>
+      <a href="pesan.html" class="nav-link">Pesan</a>
+      <a href="status.html" class="nav-link">Cek Status</a>
+      <a href="riwayat.html" class="nav-link active">Riwayat</a>
+      <a href="kontak.html" class="nav-link">Kontak</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://wa.me/6282251267232" target="_blank" class="nav-wa-btn"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Beranda</a>
+  <a href="layanan.html" class="mobile-nav-link"><i class="fa-solid fa-list-check"></i> Layanan</a>
+  <a href="pesan.html" class="mobile-nav-link"><i class="fa-solid fa-cart-plus"></i> Pesan Laundry</a>
+  <a href="status.html" class="mobile-nav-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+  <a href="riwayat.html" class="mobile-nav-link active"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pesanan</a>
+  <a href="qrcode.html" class="mobile-nav-link"><i class="fa-solid fa-qrcode"></i> QR Code Toko</a>
+  <a href="kontak.html" class="mobile-nav-link"><i class="fa-solid fa-phone"></i> Kontak</a>
+  <a href="https://wa.me/6282251267232" target="_blank" class="mobile-wa-btn"><i class="fab fa-whatsapp"></i> Chat WhatsApp</a>
+</div>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fa-solid fa-clock-rotate-left" style="margin-right:10px;"></i>Riwayat Pesanan Pelanggan</h1>
+    <p>Akses seluruh catatan transaksi laundry Anda dengan verifikasi keamanan nomor WhatsApp</p>
+  </div>
+</div>
+
+<div class="history-container">
+  
+  <!-- Verification Card -->
+  <div class="auth-verify-card">
+    <h3 style="font-family:var(--font-heading);font-weight:800;color:var(--gray-900);font-size:1.15rem;margin-bottom:14px;">
+      <i class="fa-solid fa-shield-halved" style="color:var(--primary);margin-right:8px;"></i>
+      Verifikasi Identitas Pelanggan
+    </h3>
+
+    <div style="display:grid;grid-template-columns:1.5fr 1fr auto;gap:14px;align-items:flex-end;">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="verify-wa">Nomor WhatsApp Pelanggan</label>
+        <input type="tel" id="verify-wa" class="form-control" placeholder="Contoh: 082251267232" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="verify-digits">4 Digit Terakhir No. HP</label>
+        <input type="text" id="verify-digits" class="form-control" placeholder="Contoh: 7232" maxlength="4" style="text-align:center;letter-spacing:2px;font-weight:700;" required>
+      </div>
+
+      <button type="button" class="btn btn-primary" onclick="verifyAndLoadHistory();" style="height:46px;padding:0 24px;">
+        <i class="fa-solid fa-lock-open" style="margin-right:6px;"></i> Buka Riwayat
+      </button>
+    </div>
+
+    <div class="security-notice">
+      <i class="fa-solid fa-user-shield" style="font-size:1.2rem;"></i>
+      <span>Sistem verifikasi 4-digit memastikan data transaksi dan nota pelanggan Nagasa Laundry terlindungi dari pihak yang tidak berwenang.</span>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div id="history-results" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="font-family:var(--font-heading);font-weight:800;font-size:1.1rem;color:var(--gray-800);">
+        Menampilkan Pesanan (<span id="count-history">0</span>)
+      </h3>
+      <button class="btn btn-sm btn-outline" onclick="resetVerification();">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar
+      </button>
+    </div>
+
+    <div id="history-cards-container" class="history-list"></div>
+  </div>
+
+  <!-- Empty State -->
+  <div id="empty-state" class="empty-state" style="display:none;background:white;border-radius:var(--radius-lg);padding:48px 24px;border:1px solid var(--gray-200);">
+    <i class="fa-solid fa-basket-shopping" style="font-size:3rem;color:var(--gray-300);margin-bottom:14px;display:block;"></i>
+    <h3 style="font-weight:800;color:var(--gray-700);margin-bottom:6px;">Belum Ada Riwayat Pesanan</h3>
+    <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:20px;">Nomor WhatsApp ini belum memiliki transaksi laundry terdaftar.</p>
+    <a href="pesan.html" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-cart-plus"></i> Pesan Laundry Sekarang
+    </a>
+  </div>
+
+</div>
+
+<script type="module">
+  import { getOrdersByCustomerPhone } from '../js/data-service.js';
+  import { 
+    formatCurrency, 
+    formatDate, 
+    formatWANumber, 
+    getStatusBadgeClass, 
+    getStatusLabel, 
+    getPaymentBadgeClass, 
+    getPaymentStatusLabel,
+    showToast, 
+    showLoading, 
+    hideLoading 
+  } from '../js/utils.js';
+
+  // Hamburger Menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+
+  window.verifyAndLoadHistory = async function() {
+    const wa = document.getElementById('verify-wa').value.trim();
+    const digits = document.getElementById('verify-digits').value.trim();
+
+    if (!wa || wa.length < 9) {
+      showToast('error', 'Nomor WA Tidak Valid', 'Masukkan nomor WhatsApp lengkap Anda.');
+      return;
+    }
+
+    const cleanWa = wa.replace(/\D/g, '');
+    const expectedDigits = cleanWa.slice(-4);
+
+    if (digits !== expectedDigits) {
+      showToast('error', 'Verifikasi Gagal', '4 digit keamanan tidak cocok dengan nomor WhatsApp.');
+      return;
+    }
+
+    showLoading('Memuat Riwayat Pesanan Anda...');
+    try {
+      const orders = await getOrdersByCustomerPhone(wa);
+      hideLoading();
+
+      const resultsDiv = document.getElementById('history-results');
+      const emptyDiv = document.getElementById('empty-state');
+      const container = document.getElementById('history-cards-container');
+
+      if (!orders || orders.length === 0) {
+        resultsDiv.style.display = 'none';
+        emptyDiv.style.display = 'block';
+        return;
+      }
+
+      emptyDiv.style.display = 'none';
+      resultsDiv.style.display = 'block';
+      document.getElementById('count-history').textContent = orders.length;
+
+      container.innerHTML = orders.map(o => {
+        const amountStr = o.priceType === 'per_item' ? `${o.quantity} Pcs` : `${o.weight} Kg`;
+        return `
+          <div class="history-card">
+            <div class="history-top">
+              <div>
+                <div style="font-size:0.75rem;font-weight:700;color:var(--gray-400);text-transform:uppercase;">No. Transaksi</div>
+                <div style="font-weight:900;color:var(--primary);font-size:1.15rem;letter-spacing:0.5px;">${o.transactionId}</div>
+                <div style="font-size:0.8rem;color:var(--gray-500);margin-top:2px;"><i class="fa-regular fa-calendar" style="margin-right:4px;"></i>${formatDate(o.createdAt)}</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span class="badge ${getStatusBadgeClass(o.status)}">${getStatusLabel(o.status)}</span>
+                <span class="badge ${getPaymentBadgeClass(o.paymentStatus)}">${getPaymentStatusLabel(o.paymentStatus)}</span>
+              </div>
+            </div>
+
+            <div class="history-bottom">
+              <div>
+                <div style="font-weight:700;color:var(--gray-800);">${o.serviceName} (${amountStr})</div>
+                <div style="font-size:0.82rem;color:var(--gray-500);">${o.pickupMethod === 'delivery' ? 'Antar-Jemput' : 'Antar ke Toko'} • ${o.customerAddress || 'Toko'}</div>
+                <div style="font-weight:900;color:var(--primary);font-size:1.1rem;margin-top:4px;">Total: ${formatCurrency(o.grandTotal)}</div>
+              </div>
+
+              <div style="display:flex;gap:8px;">
+                <a href="status.html?code=${encodeURIComponent(o.transactionId)}" class="btn btn-secondary btn-sm">
+                  <i class="fa-solid fa-magnifying-glass"></i> Lacak
+                </a>
+                <a href="nota.html?code=${encodeURIComponent(o.transactionId)}" class="btn btn-outline btn-sm">
+                  <i class="fa-solid fa-file-invoice"></i> Nota
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      showToast('success', 'Riwayat Ditemukan', `Ditemukan ${orders.length} transaksi untuk nomor ${wa}.`);
+    } catch (e) {
+      hideLoading();
+      console.error(e);
+      showToast('error', 'Gagal Memuat Riwayat', e.message);
+    }
+  };
+
+  window.resetVerification = function() {
+    document.getElementById('verify-wa').value = '';
+    document.getElementById('verify-digits').value = '';
+    document.getElementById('history-results').style.display = 'none';
+    document.getElementById('empty-state').style.display = 'none';
+  };
+</script>
+</body>
+</html>

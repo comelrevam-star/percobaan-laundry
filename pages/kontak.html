@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontak & Lokasi | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--gray-50); }
+    .page-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); padding: 48px 0 60px; color: white; text-align: center; margin-bottom: -32px; }
+    .page-header h1 { font-family: var(--font-heading); font-size: clamp(1.6rem,4vw,2.2rem); font-weight: 800; margin-bottom: 8px; }
+    .kontak-page { max-width: 1000px; margin: 0 auto; padding: 48px 24px 60px; }
+    .contact-main-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+    .contact-info-block { background: white; border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
+    .contact-info-title { font-family: var(--font-heading); font-weight: 800; font-size: 1.2rem; color: var(--gray-900); margin-bottom: 24px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+    .contact-item-icon { width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .contact-item-icon.blue { background: var(--primary-pale); color: var(--primary); }
+    .contact-item-icon.green { background: var(--success-light); color: var(--success); }
+    .contact-item-icon.wa { background: #DCF8C6; color: #25D366; }
+    .contact-item-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: var(--gray-400); margin-bottom: 4px; }
+    .contact-item-value { font-weight: 600; color: var(--gray-800); line-height: 1.5; }
+    .wa-chat-block { background: linear-gradient(135deg, #25D366, #128C7E); border-radius: var(--radius-lg); padding: 28px; color: white; text-align: center; margin-top: 20px; }
+    .wa-chat-title { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; }
+    .wa-chat-desc { font-size: 0.85rem; opacity: 0.9; margin-bottom: 20px; line-height: 1.6; }
+    .wa-chat-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; color: #25D366; border-radius: var(--radius-full); font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: var(--transition-fast); }
+    .wa-chat-btn:hover { background: #DCF8C6; }
+    .faq-section { margin-top: 60px; }
+    .faq-title { font-family: var(--font-heading); font-weight: 800; font-size: 1.3rem; color: var(--gray-900); margin-bottom: 24px; text-align: center; }
+    .faq-item { background: white; border-radius: var(--radius); border: 1px solid var(--gray-200); margin-bottom: 10px; overflow: hidden; }
+    .faq-question { padding: 18px 20px; font-weight: 600; color: var(--gray-800); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition-fast); }
+    .faq-question:hover { background: var(--gray-50); }
+    .faq-question i { transition: transform 0.3s; color: var(--gray-400); }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
+    .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; font-size: 0.88rem; color: var(--gray-600); line-height: 1.7; }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 20px 18px; }
+    .map-block { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); height: 320px; background: var(--gray-100); margin-top: 24px; border: 1px solid var(--gray-200); }
+    .map-block iframe { width: 100%; height: 100%; border: 0; }
+    @media (max-width: 768px) { .contact-main-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-brand">
+      <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="nav-logo" style="width:42px;height:42px;border-radius:10px;">
+      <div class="nav-name">
+        <span>Nagasa Laundry</span>
+        <span>Palu, Sulawesi Tengah</span>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="../index.html" class="nav-link">Beranda</a>
+      <a href="layanan.html" class="nav-link">Layanan</a>
+      <a href="pesan.html" class="nav-link">Pesan</a>
+      <a href="status.html" class="nav-link">Cek Status</a>
+      <a href="riwayat.html" class="nav-link">Riwayat</a>
+      <a href="kontak.html" class="nav-link active">Kontak</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://wa.me/6282251267232" target="_blank" class="nav-wa-btn"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Beranda</a>
+  <a href="layanan.html" class="mobile-nav-link"><i class="fa-solid fa-list-check"></i> Layanan</a>
+  <a href="pesan.html" class="mobile-nav-link"><i class="fa-solid fa-cart-plus"></i> Pesan Laundry</a>
+  <a href="status.html" class="mobile-nav-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+  <a href="riwayat.html" class="mobile-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pesanan</a>
+  <a href="qrcode.html" class="mobile-nav-link"><i class="fa-solid fa-qrcode"></i> QR Code Toko</a>
+  <a href="kontak.html" class="mobile-nav-link active"><i class="fa-solid fa-phone"></i> Kontak</a>
+  <a href="https://wa.me/6282251267232" target="_blank" class="mobile-wa-btn"><i class="fab fa-whatsapp"></i> Chat WhatsApp</a>
+</div>
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fa-solid fa-location-dot" style="margin-right:12px;"></i>Hubungi Kami</h1>
+    <p>Kami siap melayani kebutuhan laundry Anda setiap Senin–Sabtu, 08.00–16.30 WITA</p>
+  </div>
+</div>
+
+<div class="kontak-page">
+  <div class="contact-main-grid">
+    <!-- Contact Info -->
+    <div>
+      <div class="contact-info-block">
+        <h3 class="contact-info-title">Informasi Usaha</h3>
+
+        <div class="contact-item">
+          <div class="contact-item-icon wa"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <div class="contact-item-label">WhatsApp Resmi</div>
+            <div class="contact-item-value">+62 822-5126-7232</div>
+            <a href="https://wa.me/6282251267232" target="_blank" style="font-size:0.8rem;color:var(--primary);font-weight:600;margin-top:4px;display:inline-block;">Chat WhatsApp Langsung →</a>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-item-icon blue"><i class="fa-solid fa-location-dot"></i></div>
+          <div>
+            <div class="contact-item-label">Alamat Toko</div>
+            <div class="contact-item-value">Tanjung Harapan 1, Palu, Sulawesi Tengah</div>
+            <span style="font-size:0.8rem;color:var(--gray-500);">Patokan: Area Tanjung Harapan 1, Birobuli</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-item-icon green"><i class="fa-solid fa-clock"></i></div>
+          <div>
+            <div class="contact-item-label">Jam Operasional</div>
+            <div class="contact-item-value">08.00 – 16.30 WITA</div>
+            <span style="font-size:0.8rem;color:var(--gray-500);">Senin s/d Sabtu (Minggu & Tanggal Merah Tutup)</span>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-item-icon blue"><i class="fa-solid fa-truck"></i></div>
+          <div>
+            <div class="contact-item-label">Area Layanan Antar-Jemput</div>
+            <div class="contact-item-value">Palu dan Sekitarnya</div>
+            <span style="font-size:0.8rem;color:var(--gray-500);">Tanjung Harapan, Birobuli, Tatura, Lolu, Besusu, Mantikulore</span>
+          </div>
+        </div>
+
+        <div class="wa-chat-block">
+          <div class="wa-chat-title">Konsultasi atau Jemput Pakaian?</div>
+          <div class="wa-chat-desc">Klik tombol di bawah untuk langsung terhubung dengan kasir Nagasa Laundry via WhatsApp.</div>
+          <a href="https://wa.me/6282251267232?text=Halo%20Nagasa%20Laundry%2C%20saya%20ingin%20jemput%20pakaian" target="_blank" class="wa-chat-btn">
+            <i class="fab fa-whatsapp"></i> Chat Sekarang
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map & Location -->
+    <div>
+      <div class="contact-info-block">
+        <h3 class="contact-info-title">Peta Lokasi Kami</h3>
+        <p style="font-size:0.88rem;color:var(--gray-600);margin-bottom:12px;">
+          Kunjungi toko kami di Tanjung Harapan 1, Palu untuk antar atau ambil pakaian langsung.
+        </p>
+
+        <div class="map-block">
+          <!-- Google Maps Embed for Palu, Sulawesi Tengah -->
+          <iframe 
+            src="https://maps.google.com/maps?q=Tanjung+Harapan+1,+Palu,+Sulawesi+Tengah&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            title="Lokasi Nagasa Laundry Palu"
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
+        <div style="margin-top:20px;text-align:center;">
+          <a href="https://maps.google.com/?q=Tanjung+Harapan+1,+Palu,+Sulawesi+Tengah" target="_blank" class="btn btn-outline btn-block">
+            <i class="fa-solid fa-diamond-turn-right" style="margin-right:6px;"></i> Buka di Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <h2 class="faq-title">Pertanyaan yang Sering Diajukan (FAQ)</h2>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Berapa lama proses pengerjaan laundry?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Untuk paket reguler cuci kering dan setrika membutuhkan waktu 24 jam. Kami juga menyediakan paket Express yang selesai dalam 4-6 jam untuk kebutuhan mendesak Anda.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Bagaimana cara menggunakan layanan antar-jemput?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Sangat mudah! Buka menu <strong>Pesan</strong> di website ini, isi alamat Anda di Kota Palu, lalu pilih metode antar-jemput. Kurir kami akan segera meluncur ke lokasi Anda.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Apa saja metode pembayaran yang diterima?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Kami menerima Tunai (COD saat pakaian diantar), Transfer Bank (BCA, BRI, Mandiri), dan pembayaran instan via QRIS (semua e-wallet dan m-banking).
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Apakah pakaian putih dipisahkan dari pakaian berwarna?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Ya! Kami selalu memilah pakaian putih, pakaian mudah luntur, dan bahan sensitif untuk memastikan kualitas pakaian Anda tetap terjaga seperti baru.
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/6282251267232" target="_blank" class="wa-fab" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

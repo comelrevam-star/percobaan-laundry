@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pesan laundry online Nagasa Laundry Palu. Antar-jemput pakaian bersih, rapi, dan wangi ke rumah Anda.">
+  <title>Pemesanan Laundry | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body { padding-top: var(--nav-height); background: var(--gray-50); }
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 44px 0 54px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+    .page-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .order-container {
+      max-width: 1050px;
+      margin: -24px auto 60px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .order-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .order-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+    .section-title-sm {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray-100);
+    }
+    .section-title-sm i { color: var(--primary); }
+    
+    .service-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .service-radio-card {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .service-radio-card:hover {
+      border-color: var(--primary-lighter);
+      background: var(--primary-pale);
+    }
+    .service-radio-card.selected {
+      border-color: var(--primary);
+      background: #EFF6FF;
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+    .service-radio-card input { display: none; }
+    .src-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .src-name { font-weight: 700; font-size: 0.95rem; color: var(--gray-900); }
+    .src-price { font-weight: 800; font-size: 1.05rem; color: var(--primary); }
+    .src-unit { font-size: 0.75rem; color: var(--gray-500); font-weight: normal; }
+    .src-desc { font-size: 0.78rem; color: var(--gray-600); line-height: 1.4; }
+
+    /* Summary Card Sticky */
+    .summary-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+      position: sticky;
+      top: calc(var(--nav-height) + 20px);
+    }
+    .summary-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      color: var(--gray-600);
+    }
+    .summary-row.bold {
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    .summary-divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 16px 0;
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .total-label { font-size: 1.05rem; font-weight: 800; color: var(--gray-900); }
+    .total-amount { font-size: 1.6rem; font-weight: 900; color: var(--primary); }
+
+    .payment-badge-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .payment-option-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      background: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .payment-option-btn i { font-size: 1.2rem; }
+    .payment-option-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-pale);
+      color: var(--primary);
+    }
+
+    .bank-info-box {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+    }
+    .bank-account-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #DCFCE7;
+    }
+    .bank-account-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+    /* Modal Konfirmasi */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      padding: 16px;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      max-width: 520px;
+      width: 100%;
+      padding: 32px;
+      text-align: center;
+      box-shadow: var(--shadow-xl);
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+    .modal-overlay.open .modal-card {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 860px) {
+      .order-grid { grid-template-columns: 1fr; }
+      .summary-card { position: static; margin-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+<div id="loading-overlay"><div class="loading-spinner"></div><span class="loading-text">Memproses Pesanan...</span></div>
+<div id="toast-container"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled" id="navbar">
+  <div class="nav-container">
+    <a href="../index.html" class="nav-brand">
+      <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" class="nav-logo" style="width:42px;height:42px;border-radius:10px;">
+      <div class="nav-name">
+        <span>Nagasa Laundry</span>
+        <span>Palu, Sulawesi Tengah</span>
+      </div>
+    </a>
+    <div class="nav-menu">
+      <a href="../index.html" class="nav-link">Beranda</a>
+      <a href="layanan.html" class="nav-link">Layanan</a>
+      <a href="pesan.html" class="nav-link active">Pesan</a>
+      <a href="status.html" class="nav-link">Cek Status</a>
+      <a href="riwayat.html" class="nav-link">Riwayat</a>
+      <a href="kontak.html" class="nav-link">Kontak</a>
+    </div>
+    <div class="nav-actions">
+      <a href="https://wa.me/6282251267232" target="_blank" class="nav-wa-btn">
+        <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu Mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Beranda</a>
+  <a href="layanan.html" class="mobile-nav-link"><i class="fa-solid fa-list-check"></i> Layanan</a>
+  <a href="pesan.html" class="mobile-nav-link active"><i class="fa-solid fa-cart-plus"></i> Pesan Laundry</a>
+  <a href="status.html" class="mobile-nav-link"><i class="fa-solid fa-magnifying-glass"></i> Cek Status</a>
+  <a href="riwayat.html" class="mobile-nav-link"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pesanan</a>
+  <a href="qrcode.html" class="mobile-nav-link"><i class="fa-solid fa-qrcode"></i> QR Code Toko</a>
+  <a href="kontak.html" class="mobile-nav-link"><i class="fa-solid fa-phone"></i> Kontak</a>
+  <a href="https://wa.me/6282251267232" target="_blank" class="mobile-wa-btn">
+    <i class="fab fa-whatsapp"></i> Chat WhatsApp
+  </a>
+</div>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fa-solid fa-basket-shopping" style="margin-right:10px;"></i>Formulir Pemesanan Online</h1>
+    <p>Pakaian kotor kami jemput bersih, rapi, dan wangi kembali ke tangan Anda</p>
+  </div>
+</div>
+
+<!-- Main Form Section -->
+<div class="order-container">
+  <div class="order-grid">
+    
+    <!-- Left Column: Form Input -->
+    <div class="order-card">
+      <form id="order-form" onsubmit="event.preventDefault(); submitOrder();">
+        
+        <!-- 1. Data Pelanggan -->
+        <div class="section-title-sm">
+          <i class="fa-solid fa-user"></i> 1. Data Pelanggan
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="cust-name">Nama Lengkap <span style="color:var(--danger);">*</span></label>
+          <input type="text" id="cust-name" class="form-control" placeholder="Contoh: Ibu Rahmawati" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cust-phone">Nomor WhatsApp Aktif <span style="color:var(--danger);">*</span></label>
+          <div style="position:relative;">
+            <input type="tel" id="cust-phone" class="form-control" placeholder="Contoh: 082251267232" required>
+          </div>
+          <small style="color:var(--gray-500);font-size:0.78rem;">Konfirmasi status & nota digital akan dikirimkan ke WhatsApp ini.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cust-address">Alamat Penjemputan / Pengantaran</label>
+          <textarea id="cust-address" class="form-control" rows="2" placeholder="Contoh: Jl. Tanjung Harapan 1 No. 24, Birobuli Selatan, Palu"></textarea>
+        </div>
+
+        <!-- 2. Pilihan Layanan -->
+        <div class="section-title-sm" style="margin-top:32px;">
+          <i class="fa-solid fa-shirt"></i> 2. Pilih Jenis Layanan
+        </div>
+
+        <div id="services-radio-container" class="service-options">
+          <!-- Diisi via JavaScript -->
+          <div style="text-align:center;padding:20px;grid-column:1/-1;color:var(--gray-400);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Memuat daftar layanan...
+          </div>
+        </div>
+
+        <!-- 3. Estimasi Berat / Jumlah -->
+        <div class="section-title-sm" style="margin-top:32px;">
+          <i class="fa-solid fa-weight-scale"></i> 3. Estimasi Berat & Jumlah
+        </div>
+
+        <div id="weight-input-group" class="form-group">
+          <label class="form-label" for="order-weight">Estimasi Berat Pakaian (Kg)</label>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <input type="number" id="order-weight" class="form-control" value="3" min="1" max="100" step="0.5" oninput="calculateTotal();">
+            <span style="font-weight:700;color:var(--gray-600);min-width:30px;">Kg</span>
+          </div>
+          <small style="color:var(--gray-500);font-size:0.78rem;">Berat riil akan ditimbang ulang secara akurat oleh kasir Nagasa Laundry saat penyerahan.</small>
+        </div>
+
+        <div id="qty-input-group" class="form-group" style="display:none;">
+          <label class="form-label" for="order-qty">Jumlah Pakaian Satuan (Pcs)</label>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <input type="number" id="order-qty" class="form-control" value="1" min="1" max="50" step="1" oninput="calculateTotal();">
+            <span style="font-weight:700;color:var(--gray-600);min-width:30px;">Pcs</span>
+          </div>
+        </div>
+
+        <!-- 4. Metode Pengambilan -->
+        <div class="section-title-sm" style="margin-top:32px;">
+          <i class="fa-solid fa-truck"></i> 4. Metode Pengambilan & Pengantaran
+        </div>
+
+        <div class="form-group">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <label id="btn-method-delivery" class="service-radio-card selected" onclick="selectPickupMethod('delivery');">
+              <div class="src-top">
+                <span class="src-name"><i class="fa-solid fa-motorcycle" style="color:var(--primary);margin-right:6px;"></i>Antar-Jemput</span>
+                <i class="fa-solid fa-circle-check" style="color:var(--primary);" id="icon-check-delivery"></i>
+              </div>
+              <span class="src-desc">Kurir laundry jemput & antar pakaian ke alamat Anda</span>
+            </label>
+
+            <label id="btn-method-pickup" class="service-radio-card" onclick="selectPickupMethod('pickup');">
+              <div class="src-top">
+                <span class="src-name"><i class="fa-solid fa-store" style="color:var(--primary);margin-right:6px;"></i>Bawa ke Toko</span>
+                <i class="fa-regular fa-circle" style="color:var(--gray-300);" id="icon-check-pickup"></i>
+              </div>
+              <span class="src-desc">Pelanggan antar langsung ke Tanjung Harapan 1 (Gratis Ongkir)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Jarak jika antar-jemput -->
+        <div id="distance-container" class="form-group" style="background:var(--primary-pale);padding:16px;border-radius:var(--radius);">
+          <label class="form-label" for="delivery-distance" style="color:var(--primary-dark);font-weight:700;">
+            Estimasi Jarak dari Toko ke Rumah Anda (Km)
+          </label>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <input type="range" id="delivery-distance-range" min="1" max="15" value="2" step="0.5" style="flex:1;" oninput="updateDistance(this.value);">
+            <span id="distance-display" style="font-weight:800;font-size:1.1rem;color:var(--primary);min-width:55px;text-align:right;">2 Km</span>
+          </div>
+          <small style="color:var(--gray-600);font-size:0.75rem;margin-top:4px;display:block;">
+            Tarif antar-jemput: Rp 3.000/km (Min. Rp 5.000). Gratis ongkir untuk pesanan di atas Rp 100.000!
+          </small>
+        </div>
+
+        <!-- 5. Metode Pembayaran -->
+        <div class="section-title-sm" style="margin-top:32px;">
+          <i class="fa-solid fa-wallet"></i> 5. Metode Pembayaran
+        </div>
+
+        <div class="payment-badge-group">
+          <div class="payment-option-btn selected" id="opt-pay-cash" onclick="selectPaymentMethod('cash');">
+            <i class="fa-solid fa-money-bill-wave" style="color:var(--success);"></i>
+            <span>Tunai / COD</span>
+          </div>
+          <div class="payment-option-btn" id="opt-pay-qris" onclick="selectPaymentMethod('qris');">
+            <i class="fa-solid fa-qrcode" style="color:var(--primary);"></i>
+            <span>QRIS</span>
+          </div>
+          <div class="payment-option-btn" id="opt-pay-transfer" onclick="selectPaymentMethod('transfer');">
+            <i class="fa-solid fa-building-columns" style="color:var(--accent);"></i>
+            <span>Transfer Bank</span>
+          </div>
+        </div>
+
+        <!-- Bank Details / QRIS Details Box -->
+        <div id="payment-details-box" style="display:none;margin-top:14px;"></div>
+
+        <!-- 6. Catatan Khusus -->
+        <div class="section-title-sm" style="margin-top:32px;">
+          <i class="fa-solid fa-clipboard-list"></i> 6. Catatan Khusus
+        </div>
+        
+        <div class="form-group">
+          <textarea id="order-notes" class="form-control" rows="2" placeholder="Contoh: Tolong pisahkan baju putih, gunakan pelembut aroma lavender, baju siap besok sore."></textarea>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Right Column: Rincian Biaya & Tombol Submit -->
+    <div>
+      <div class="summary-card">
+        <h3 class="summary-title">
+          <i class="fa-solid fa-receipt" style="color:var(--primary);"></i>
+          Rincian Pembayaran
+        </h3>
+
+        <div class="summary-row">
+          <span>Layanan Terpilih:</span>
+          <span id="sum-service-name" style="font-weight:600;color:var(--gray-900);">-</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Harga Satuan:</span>
+          <span id="sum-unit-price">Rp 0</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Jumlah / Bobot:</span>
+          <span id="sum-amount">0 kg</span>
+        </div>
+
+        <div class="summary-row bold">
+          <span>Subtotal Layanan:</span>
+          <span id="sum-subtotal">Rp 0</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Ongkir Antar-Jemput:</span>
+          <span id="sum-delivery">Rp 0</span>
+        </div>
+
+        <div class="summary-row" id="row-discount" style="display:none;color:var(--success);">
+          <span>Diskon Promo:</span>
+          <span id="sum-discount">- Rp 0</span>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-total">
+          <div>
+            <div class="total-label">Total Pembayaran</div>
+            <small style="color:var(--gray-400);font-size:0.75rem;">Termasuk PPN & Biaya Layanan</small>
+          </div>
+          <div class="total-amount" id="sum-grand-total">Rp 0</div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block btn-lg" style="margin-top:24px;width:100%;font-size:1.05rem;" onclick="submitOrder();">
+          <i class="fa-solid fa-circle-check" style="margin-right:8px;"></i> Buat Pesanan Sekarang
+        </button>
+
+        <p style="font-size:0.75rem;color:var(--gray-500);text-align:center;margin-top:14px;line-height:1.5;">
+          <i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> Transaksi aman. Kasir Nagasa Laundry akan memverifikasi dan mengonfirmasi pesanan Anda via WhatsApp.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal Sukses Pesanan -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal-card">
+    <div style="width:72px;height:72px;background:var(--success-light);color:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 18px;">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <h2 style="font-family:var(--font-heading);font-weight:800;color:var(--gray-900);font-size:1.4rem;margin-bottom:6px;">Pesanan Berhasil Dibuat!</h2>
+    <p style="color:var(--gray-600);font-size:0.88rem;margin-bottom:18px;">Terima kasih telah mempercayakan pakaian Anda kepada Nagasa Laundry.</p>
+    
+    <div style="background:var(--primary-pale);border-radius:var(--radius);padding:14px;margin-bottom:20px;">
+      <span style="font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Nomor Transaksi Anda</span>
+      <div id="modal-order-id" style="font-size:1.35rem;font-weight:900;color:var(--primary);letter-spacing:1px;margin-top:2px;">NGS-XXXX</div>
+      <div id="modal-order-total" style="font-weight:700;color:var(--gray-700);font-size:0.95rem;margin-top:4px;">Total: Rp 0</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <a id="btn-wa-confirm" href="#" target="_blank" class="btn btn-wa btn-block">
+        <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> Kirim Rincian ke WhatsApp Kasir
+      </a>
+      <a id="btn-track-order" href="#" class="btn btn-secondary btn-block">
+        <i class="fa-solid fa-magnifying-glass"></i> Cek Status Pesanan
+      </a>
+      <a id="btn-view-receipt" href="#" class="btn btn-outline btn-block" style="border:1px solid var(--gray-300);">
+        <i class="fa-solid fa-file-invoice"></i> Lihat / Cetak Nota Digital
+      </a>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { getActiveServices, getShopSettings, createOrder } from '../js/data-service.js';
+  import { formatCurrency, formatWANumber, buildWaOrderLink, showToast, showLoading, hideLoading } from '../js/utils.js';
+
+  // State
+  let services = [];
+  let settings = {};
+  let selectedService = null;
+  let pickupMethod = 'delivery'; // 'delivery' | 'pickup'
+  let paymentMethod = 'cash'; // 'cash' | 'qris' | 'transfer'
+  let deliveryDistance = 2; // km
+
+  // Hamburger Menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger?.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu?.classList.toggle('open');
+  });
+
+  // Inisialisasi Halaman
+  async function initPage() {
+    showLoading('Memuat Layanan & Tarif...');
+    try {
+      services = await getActiveServices();
+      settings = await getShopSettings();
+      renderServicesList();
+      selectFirstService();
+      calculateTotal();
+    } catch (e) {
+      console.error(e);
+      showToast('error', 'Gagal memuat layanan', 'Silakan refresh halaman.');
+    } finally {
+      hideLoading();
+    }
+  }
+
+  // Render Pilihan Layanan
+  function renderServicesList() {
+    const container = document.getElementById('services-radio-container');
+    if (!services || services.length === 0) {
+      container.innerHTML = '<p style="color:var(--danger);grid-column:1/-1;">Tidak ada layanan aktif.</p>';
+      return;
+    }
+
+    container.innerHTML = services.map(s => {
+      const unit = s.priceType === 'per_item' ? '/pcs' : '/kg';
+      const badge = s.badge ? `<span style="position:absolute;top:-8px;right:10px;background:var(--primary);color:white;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:99px;">${s.badge}</span>` : '';
+      return `
+        <div class="service-radio-card" id="srv-card-${s.id}" onclick="selectService('${s.id}')">
+          ${badge}
+          <div class="src-top">
+            <span class="src-name"><i class="fa-solid ${s.icon || 'fa-shirt'}" style="margin-right:6px;color:var(--primary);"></i>${s.name}</span>
+            <span class="src-price">${formatCurrency(s.price)}<span class="src-unit">${unit}</span></span>
+          </div>
+          <p class="src-desc">${s.description || ''}</p>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function selectFirstService() {
+    // Cari yang cuci-setrika atau layanan pertama
+    const preferred = services.find(s => s.id === 'cuci-setrika') || services[0];
+    if (preferred) selectService(preferred.id);
+  }
+
+  window.selectService = function(id) {
+    selectedService = services.find(s => s.id === id);
+    if (!selectedService) return;
+
+    // Highlight card
+    document.querySelectorAll('.service-radio-card').forEach(el => el.classList.remove('selected'));
+    document.getElementById(`srv-card-${id}`)?.classList.add('selected');
+
+    // Toggle weight vs qty input
+    const weightGroup = document.getElementById('weight-input-group');
+    const qtyGroup = document.getElementById('qty-input-group');
+    if (selectedService.priceType === 'per_item') {
+      weightGroup.style.display = 'none';
+      qtyGroup.style.display = 'block';
+    } else {
+      weightGroup.style.display = 'block';
+      qtyGroup.style.display = 'none';
+    }
+
+    calculateTotal();
+  };
+
+  window.selectPickupMethod = function(method) {
+    pickupMethod = method;
+    const btnDel = document.getElementById('btn-method-delivery');
+    const btnPick = document.getElementById('btn-method-pickup');
+    const iconDel = document.getElementById('icon-check-delivery');
+    const iconPick = document.getElementById('icon-check-pickup');
+    const distContainer = document.getElementById('distance-container');
+
+    if (method === 'delivery') {
+      btnDel.classList.add('selected');
+      btnPick.classList.remove('selected');
+      iconDel.className = 'fa-solid fa-circle-check';
+      iconDel.style.color = 'var(--primary)';
+      iconPick.className = 'fa-regular fa-circle';
+      iconPick.style.color = 'var(--gray-300)';
+      distContainer.style.display = 'block';
+    } else {
+      btnPick.classList.add('selected');
+      btnDel.classList.remove('selected');
+      iconPick.className = 'fa-solid fa-circle-check';
+      iconPick.style.color = 'var(--primary)';
+      iconDel.className = 'fa-regular fa-circle';
+      iconDel.style.color = 'var(--gray-300)';
+      distContainer.style.display = 'none';
+    }
+
+    calculateTotal();
+  };
+
+  window.updateDistance = function(val) {
+    deliveryDistance = Number(val);
+    document.getElementById('distance-display').textContent = `${deliveryDistance} Km`;
+    calculateTotal();
+  };
+
+  window.selectPaymentMethod = function(method) {
+    paymentMethod = method;
+    document.querySelectorAll('.payment-option-btn').forEach(btn => btn.classList.remove('selected'));
+    document.getElementById(`opt-pay-${method}`)?.classList.add('selected');
+
+    const detailsBox = document.getElementById('payment-details-box');
+    if (method === 'transfer') {
+      detailsBox.style.display = 'block';
+      detailsBox.innerHTML = `
+        <div class="bank-info-box">
+          <div style="font-weight:700;color:#166534;margin-bottom:8px;">
+            <i class="fa-solid fa-circle-info"></i> Rekening Resmi Nagasa Laundry:
+          </div>
+          <div class="bank-account-item">
+            <span><strong>BCA</strong> (Admin Nagasa)</span>
+            <span style="font-family:monospace;font-weight:700;">7920182741</span>
+          </div>
+          <div class="bank-account-item">
+            <span><strong>BRI</strong> (Nagasa Laundry)</span>
+            <span style="font-family:monospace;font-weight:700;">5210-0102-9384-531</span>
+          </div>
+          <div class="bank-account-item">
+            <span><strong>Bank Mandiri</strong> (Nagasa Laundry)</span>
+            <span style="font-family:monospace;font-weight:700;">151-00-1239847-1</span>
+          </div>
+          <div style="font-size:0.75rem;color:#15803D;margin-top:8px;">
+            Bukti transfer dapat diunggah setelah pesanan selesai dibuat atau dikirim via WhatsApp.
+          </div>
+        </div>
+      `;
+    } else if (method === 'qris') {
+      detailsBox.style.display = 'block';
+      detailsBox.innerHTML = `
+        <div class="bank-info-box" style="text-align:center;">
+          <div style="font-weight:700;color:#166534;margin-bottom:6px;">
+            <i class="fa-solid fa-qrcode"></i> QRIS Nagasa Laundry (NSP / Shopee / GoPay / OVO / Dana / Mobile Banking)
+          </div>
+          <p style="font-size:0.78rem;color:#15803D;margin-bottom:10px;">
+            Scan QRIS dapat dilakukan saat konfirmasi via WhatsApp atau pada nota transaksi digital.
+          </p>
+        </div>
+      `;
+    } else {
+      detailsBox.style.display = 'none';
+    }
+  };
+
+  window.calculateTotal = function() {
+    if (!selectedService) return;
+
+    const isItem = selectedService.priceType === 'per_item';
+    const weight = Number(document.getElementById('order-weight')?.value) || 1;
+    const qty = Number(document.getElementById('order-qty')?.value) || 1;
+
+    const unitPrice = selectedService.price;
+    const subtotal = isItem ? (unitPrice * qty) : (unitPrice * weight);
+
+    // Ongkir
+    let deliveryFee = 0;
+    if (pickupMethod === 'delivery') {
+      const ratePerKm = settings.deliveryRatePerKm || 3000;
+      const minFee = settings.minDeliveryFee || 5000;
+      const freeThreshold = settings.freeDeliveryMinOrder || 100000;
+
+      if (subtotal >= freeThreshold) {
+        deliveryFee = 0; // Gratis ongkir
+      } else {
+        deliveryFee = Math.max(minFee, deliveryDistance * ratePerKm);
+      }
+    }
+
+    const grandTotal = subtotal + deliveryFee;
+
+    // Update UI Summary
+    document.getElementById('sum-service-name').textContent = selectedService.name;
+    document.getElementById('sum-unit-price').textContent = `${formatCurrency(unitPrice)} / ${isItem ? 'pcs' : 'kg'}`;
+    document.getElementById('sum-amount').textContent = isItem ? `${qty} Pcs` : `${weight} Kg`;
+    document.getElementById('sum-subtotal').textContent = formatCurrency(subtotal);
+    
+    const deliveryEl = document.getElementById('sum-delivery');
+    if (pickupMethod === 'delivery') {
+      if (deliveryFee === 0) {
+        deliveryEl.innerHTML = `<span style="color:var(--success);font-weight:700;">GRATIS (Promo)</span>`;
+      } else {
+        deliveryEl.textContent = formatCurrency(deliveryFee);
+      }
+    } else {
+      deliveryEl.textContent = 'Rp 0 (Di Toko)';
+    }
+
+    document.getElementById('sum-grand-total').textContent = formatCurrency(grandTotal);
+
+    return { subtotal, deliveryFee, grandTotal, weight, qty };
+  };
+
+  window.submitOrder = async function() {
+    const custName = document.getElementById('cust-name').value.trim();
+    const custPhone = document.getElementById('cust-phone').value.trim();
+    const custAddress = document.getElementById('cust-address').value.trim();
+    const notes = document.getElementById('order-notes').value.trim();
+
+    if (!custName) {
+      showToast('error', 'Nama Wajib Diisi', 'Mohon masukkan nama lengkap Anda.');
+      document.getElementById('cust-name').focus();
+      return;
+    }
+    if (!custPhone || custPhone.length < 9) {
+      showToast('error', 'Nomor WhatsApp Tidak Valid', 'Mohon periksa kembali nomor WhatsApp Anda.');
+      document.getElementById('cust-phone').focus();
+      return;
+    }
+    if (pickupMethod === 'delivery' && !custAddress) {
+      showToast('error', 'Alamat Wajib Diisi', 'Layanan antar-jemput memerlukan alamat penjemputan.');
+      document.getElementById('cust-address').focus();
+      return;
+    }
+
+    const { subtotal, deliveryFee, grandTotal, weight, qty } = calculateTotal();
+
+    const orderData = {
+      customerName: custName,
+      customerPhone: custPhone,
+      customerAddress: custAddress || 'Datang langsung ke toko',
+      serviceId: selectedService.id,
+      serviceName: selectedService.name,
+      servicePrice: selectedService.price,
+      priceType: selectedService.priceType,
+      weight: selectedService.priceType === 'per_item' ? 0 : weight,
+      quantity: selectedService.priceType === 'per_item' ? qty : 0,
+      serviceTotal: subtotal,
+      pickupMethod: pickupMethod,
+      deliveryDistanceKm: pickupMethod === 'delivery' ? deliveryDistance : 0,
+      deliveryFee: deliveryFee,
+      discount: 0,
+      grandTotal: grandTotal,
+      paymentMethod: paymentMethod,
+      paymentStatus: 'belum_dibayar',
+      notes: notes
+    };
+
+    showLoading('Menyimpan Pesanan Anda...');
+    try {
+      const created = await createOrder(orderData);
+      hideLoading();
+
+      // Setup Modal
+      document.getElementById('modal-order-id').textContent = created.transactionId;
+      document.getElementById('modal-order-total').textContent = `Total: ${formatCurrency(created.grandTotal)}`;
+
+      const waLink = buildWaOrderLink(created);
+      document.getElementById('btn-wa-confirm').href = waLink;
+      document.getElementById('btn-track-order').href = `status.html?code=${encodeURIComponent(created.transactionId)}`;
+      document.getElementById('btn-view-receipt').href = `nota.html?code=${encodeURIComponent(created.transactionId)}`;
+
+      document.getElementById('success-modal').classList.add('open');
+      showToast('success', 'Pesanan Berhasil!', `Kode Transaksi: ${created.transactionId}`);
+    } catch (err) {
+      hideLoading();
+      console.error(err);
+      showToast('error', 'Gagal Membuat Pesanan', err.message || 'Terjadi kesalahan sistem.');
+    }
+  };
+
+  initPage();
+</script>
+</body>
+</html>

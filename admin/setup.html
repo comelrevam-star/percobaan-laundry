@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Admin & Database | Nagasa Laundry Palu</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+  <style>
+    body {
+      background: var(--gray-100);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+      font-family: 'Inter', sans-serif;
+    }
+    .setup-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      max-width: 650px;
+      width: 100%;
+      padding: 40px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+    .setup-step {
+      background: var(--gray-50);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+    .step-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      color: var(--gray-900);
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+<div id="toast-container"></div>
+<div id="loading-overlay"><div class="loading-spinner"></div><span class="loading-text">Memproses Setup...</span></div>
+
+<div class="setup-card">
+  <div style="text-align:center;margin-bottom:28px;">
+    <img src="../assets/images/logo-icon.svg" alt="Nagasa Laundry" style="width:64px;height:64px;border-radius:16px;margin:0 auto 10px;">
+    <h1 style="font-family:var(--font-heading);font-weight:900;color:var(--primary-dark);font-size:1.45rem;">
+      Inisialisasi & Setup Admin Nagasa Laundry
+    </h1>
+    <p style="font-size:0.85rem;color:var(--gray-500);">Panduan cepat inisialisasi akun administrator dan database Firestore</p>
+  </div>
+
+  <!-- Status Koneksi Firebase -->
+  <div class="setup-step" id="step-firebase-status">
+    <div class="step-title">
+      <i class="fa-solid fa-server"></i> 1. Status Koneksi Firebase
+    </div>
+    <div id="firebase-status-badge" style="font-size:0.88rem;margin-bottom:10px;">
+      <!-- Populated via JS -->
+    </div>
+    <p style="font-size:0.8rem;color:var(--gray-600);line-height:1.5;">
+      Konfigurasi Firebase terletak pada berkas <code>js/firebase-config.js</code>. Anda dapat memperbarui config secara langsung atau menempelkannya di bawah ini.
+    </p>
+    <div style="margin-top:10px;">
+      <button class="btn btn-sm btn-outline" onclick="toggleConfigInput()">
+        <i class="fa-solid fa-code"></i> Perbarui Konfigurasi Firebase via Browser
+      </button>
+    </div>
+    <div id="custom-config-wrap" style="display:none;margin-top:14px;">
+      <textarea id="json-config-input" class="form-control" rows="5" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "messagingSenderId": "...", "appId": "..."}'></textarea>
+      <button class="btn btn-sm btn-primary" style="margin-top:8px;" onclick="saveCustomConfig()">
+        Simpan Konfigurasi ke Browser
+      </button>
+    </div>
+  </div>
+
+  <!-- Buat Akun Admin Pertama -->
+  <div class="setup-step">
+    <div class="step-title">
+      <i class="fa-solid fa-user-shield"></i> 2. Buat Akun Admin Pertama (Firebase Auth & Firestore)
+    </div>
+    <p style="font-size:0.82rem;color:var(--gray-600);margin-bottom:14px;">
+      Akun ini akan didaftarkan di Firebase Authentication dan dicatat ke dalam koleksi <code>admins</code> di Firestore.
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Email Admin</label>
+        <input type="email" id="new-admin-email" class="form-control" value="admin@nagasalaundry.com">
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Password Admin</label>
+        <input type="password" id="new-admin-pass" class="form-control" value="admin123" minlength="6">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nama Lengkap / Jabatan</label>
+      <input type="text" id="new-admin-name" class="form-control" value="Pemilik Nagasa Laundry">
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="createInitialAdmin()">
+      <i class="fa-solid fa-user-plus"></i> Daftarkan Akun Admin ke Firebase
+    </button>
+  </div>
+
+  <!-- Seeder Firestore Data Awal -->
+  <div class="setup-step">
+    <div class="step-title">
+      <i class="fa-solid fa-database"></i> 3. Isi Data Awal Layanan & Toko (Firestore Seeder)
+    </div>
+    <p style="font-size:0.82rem;color:var(--gray-600);margin-bottom:12px;">
+      Klik tombol di bawah untuk memasukkan 6 layanan standar (Cuci Kering, Cuci Setrika, Setrika Saja, Kiloan, Satuan, Express) serta informasi operasional Nagasa Laundry Palu ke koleksi <code>services</code> dan <code>settings</code> di Firestore.
+    </p>
+    <button class="btn btn-success btn-block" onclick="runFirestoreSeeder()">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> 1-Klik Isi Data Awal ke Firestore
+    </button>
+  </div>
+
+  <!-- Link Balik -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px;">
+    <a href="../index.html" class="btn btn-sm btn-outline">
+      <i class="fa-solid fa-arrow-left"></i> Ke Website
+    </a>
+    <a href="login.html" class="btn btn-sm btn-primary">
+      <i class="fa-solid fa-right-to-bracket"></i> Ke Halaman Login Admin →
+    </a>
+  </div>
+</div>
+
+<script type="module">
+  import { auth, db, isFirebaseConfigured, createUserWithEmailAndPassword, signInWithEmailAndPassword, doc, setDoc } from '../js/firebase-config.js';
+  import { seedInitialData } from '../js/data-service.js';
+  import { showToast, showLoading, hideLoading } from '../js/utils.js';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    checkStatus();
+  });
+
+  function checkStatus() {
+    const badge = document.getElementById('firebase-status-badge');
+    if (isFirebaseConfigured()) {
+      badge.innerHTML = `<span class="badge badge-success" style="font-size:0.85rem;padding:6px 14px;"><i class="fa-solid fa-check"></i> Firebase Terhubung & Aktif</span>`;
+    } else {
+      badge.innerHTML = `<span class="badge badge-warning" style="font-size:0.85rem;padding:6px 14px;"><i class="fa-solid fa-triangle-exclamation"></i> Menunggu Konfigurasi API Key di firebase-config.js</span>`;
+    }
+  }
+
+  window.toggleConfigInput = function() {
+    const wrap = document.getElementById('custom-config-wrap');
+    wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+  };
+
+  window.saveCustomConfig = function() {
+    const raw = document.getElementById('json-config-input').value.trim();
+    try {
+      const parsed = JSON.parse(raw);
+      if (!parsed.apiKey || !parsed.projectId) {
+        showToast('error', 'Format Tidak Valid', 'Pastikan objek memuat apiKey dan projectId.');
+        return;
+      }
+      localStorage.setItem('nagasa_firebase_config', JSON.stringify(parsed));
+      showToast('success', 'Tersimpan!', 'Konfigurasi disimpan. Halaman akan dimuat ulang.');
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (e) {
+      showToast('error', 'Format JSON Error', e.message);
+    }
+  };
+
+  window.createInitialAdmin = async function() {
+    const email = document.getElementById('new-admin-email').value.trim();
+    const pass = document.getElementById('new-admin-pass').value;
+    const name = document.getElementById('new-admin-name').value.trim();
+
+    if (!email || !pass || pass.length < 6) {
+      showToast('error', 'Input Kurang', 'Password minimal 6 karakter.');
+      return;
+    }
+
+    if (!isFirebaseConfigured() || !auth || !db) {
+      showToast('warning', 'Firebase Belum Terhubung', 'Silakan isi API key di js/firebase-config.js terlebih dahulu.');
+      return;
+    }
+
+    showLoading('Mendaftarkan Admin ke Firebase Auth...');
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      const uid = cred.user.uid;
+
+      // Simpan ke collection admins di Firestore
+      await setDoc(doc(db, 'admins', uid), {
+        uid: uid,
+        email: email,
+        name: name,
+        role: 'superadmin',
+        createdAt: new Date().toISOString()
+      });
+
+      hideLoading();
+      showToast('success', 'Admin Berhasil Dibuat!', `UID: ${uid}. Anda sekarang bisa login.`);
+    } catch (err) {
+      hideLoading();
+      console.error(err);
+      if (err.code === 'auth/email-already-in-use') {
+        try {
+          showLoading('Email sudah terdaftar, menghubungkan hak akses admin...');
+          const cred = await signInWithEmailAndPassword(auth, email, pass);
+          await setDoc(doc(db, 'admins', cred.user.uid), {
+            uid: cred.user.uid,
+            email: email,
+            name: name,
+            role: 'superadmin',
+            createdAt: new Date().toISOString()
+          }, { merge: true });
+          hideLoading();
+          showToast('success', 'Admin Berhasil Disinkronkan!', `UID: ${cred.user.uid}. Anda dapat langsung login.`);
+          return;
+        } catch (signInErr) {
+          hideLoading();
+          showToast('info', 'Email Sudah Ada', 'Akun ini sudah ada di Firebase Auth. Silakan masuk di halaman login admin.');
+        }
+      } else if (err.code === 'auth/operation-not-allowed') {
+        showToast('error', 'Auth Belum Aktif', 'Aktifkan metode "Email/Password" di Firebase Console > Authentication > Sign-in method.');
+      } else {
+        showToast('error', 'Gagal Membuat Admin', err.message || err.code);
+      }
+    }
+  };
+
+  window.runFirestoreSeeder = async function() {
+    showLoading('Mengisi Data Layanan & Toko ke Firestore...');
+    try {
+      await seedInitialData();
+      hideLoading();
+      showToast('success', 'Seeding Selesai!', 'Koleksi services dan settings berhasil dibuat di Firestore.');
+    } catch (err) {
+      hideLoading();
+      console.error(err);
+      showToast('error', 'Gagal Seeding', err.message);
+    }
+  };
+</script>
+</body>
+</html>
